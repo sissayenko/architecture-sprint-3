@@ -1,0 +1,71 @@
+@startuml ER.puml
+package profile_package as "Profile management" {
+    entity householder {
+        * id
+        name
+        email
+        password
+        is_enabled
+        update_timestamp
+    }
+    entity house {
+        * id
+        householder_id [FK]
+        address
+        is_enabled
+        update_timestamp
+    }
+}
+
+package device_package as "Device management" {
+    entity device {
+        * id
+        house_id [=>house.id]
+        r_device_type_code [FK]
+        name
+        is_enabled
+        update_timestamp
+    }
+    entity command_log {
+        * id
+        device_id [FK]
+        householder_id [householder.id]
+        command
+        result
+        commamd_timestamp
+
+    }
+    entity r_device_type {
+        * id
+        code
+        is_enabled
+    }
+}
+
+package telemetry_package as "Telemetry" {
+    entity queue {
+        * id
+        device_id [=>device.id]
+        device_type [=>r_device_type.code]
+    }
+
+entity telemetry {
+    * id
+    device_id [=>device.id]
+    telemetry_timestamp
+    value
+    unit
+    sensor
+}
+}
+
+householder --{ house
+householder --{ command_log
+house --{ device
+device --{ telemetry
+device --{ command_log
+r_device_type -{ device
+
+
+
+@enduml

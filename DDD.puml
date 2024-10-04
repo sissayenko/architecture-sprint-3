@@ -1,0 +1,43 @@
+@startuml DDD_Diagram
+
+!include <DomainStory/domainStory.puml>
+!include <material/settings_box>
+!unquoted procedure Process($name, $label = "", $color = "", $scale = "", $note = "")
+Actor("Process", "$ma_settings_box", $name, $label, $color, $scale, $note)
+!endprocedure
+
+Person(householder)
+
+
+Boundary(device_management, Device management) {
+    Conversation(commandH, "Command from householder")
+    Conversation(view, "View device state")
+    Conversation(register_D, "Register device")
+}
+
+Boundary(profile_management, Profile management) {
+    Conversation(register_U, "Register user")
+    Conversation(register_H, "Register house")
+}
+
+
+System(smartHome, "Smart House")
+System(device, "Device")
+
+Boundary(telemetry, "Telemetry") {
+    Process(telemetryB, "Telemetry")
+
+}
+
+activity(_, householder, "Send command", commandH, "to", smartHome)
+activity(|, smartHome, "Send command", device)
+
+activity(_, householder, "View device state", view, "from", smartHome)
+
+activity(_, householder, "Register user", register_U, "in", smartHome)
+activity(_, householder, "Register house", register_H, "in", smartHome)
+activity(_, householder, "Register device", register_D, "in", smartHome)
+
+activity(_, smartHome, "Get telemetry by schedule", telemetryB, "from", device)
+
+@enduml
