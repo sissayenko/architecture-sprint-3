@@ -1,6 +1,8 @@
 @startuml
 !include <C4/C4_Component>
 
+Title Smart House System TO-BE component diagram
+
 LAYOUT_WITH_LEGEND()
 
 Person(householder, "Householder", "A person who runs a house")
@@ -8,45 +10,76 @@ Person(householder, "Householder", "A person who runs a house")
 System_Boundary(smartHome_b, "Smart House", "A system that controls a house's heating system") {
     Container(web, "Web application", "An adaptive application providing UI to Smart House system")
     Container(gw, "API gateway")
-    Container(profile, "Profile management")
-    Container(device, "Device management")
-    Container(telemetry, "Telemetry")
-    Container(monolith, "Existing monolith")
+    Container_Boundary(profile, "Profile management") {
+        Container(profile_controller, "Profile management controller", "Handles profile requests", "Spring Boot")
+        Container(profile_service, "Profile management service", "", "Spring Boot")
+        ContainerDb(profile_db, "Profile management database", "", "PostgreSQL")
+
+        Lay_D(profile_controller, profile_service)
+        Lay_D(profile_service, profile_db)
+    }
+    Container_Boundary(device, "Device management") {
+        Container(device_controller, "Device management controller", "Handles device requests", "Spring Boot")
+        Container(device_service, "Device management service", "", "Spring Boot")
+        ContainerDb(device_db, "Device management database", "", "PostgreSQL")
+
+        Lay_D(device_controller, device_service)
+        Lay_D(device_service, device_db)
+    }
+    Container_Boundary(telemetry, "Telemetry") {
+        Container(telemetry_controller, "Telemetry controller", "Handles telemetry data requests", "Spring Boot")
+        Container(telemetry_service, "Telemetry service", "", "Spring Boot")
+        Container(telemetry_harvester, "Telemetry harvester service", "Runned by schedule to get telemetry data and store it to database", "Spring Boot")
+        ContainerDb(telemetry_db, "Telemetry database", "", "PostgreSQL")
+        ContainerQueue(telemetry_queue, "Telemetry queue", "", "RabbitMQ")
+        Container(telemetry_qp, "Telemetry queue processor", "Process telemetry data from queue", "Spring Boot")
+
+        Lay_D(telemetry_controller, telemetry_service)
+        Lay_D(telemetry_service, telemetry_db)
+        Lay_R(telemetry_service, telemetry_harvester)
+    }
 }
 
 System_Ext(heater, "Heating System", "Home heating system with temperature sensors")
 System_Ext(light, "Lighting System", "Home lighing system with light sensors")
 System_Ext(gate, "Automatic gate", "Automatic gate system")
-System_Ext(video, "video surveillance", "video surveillance system")
-
+System_Ext(video, "Video surveillance", "video surveillance system")
 
 Lay_R(profile, device)
 
-Rel_D(householder, web, "")
-Rel_D(web, gw, "Call API")
-Rel_D(gw, profile, "")
-Rel_D(gw, device, "")
-Rel_D(device, monolith, "")
+Rel_D(householder, web, "dafdsgf")
+Rel_D(web, gw, "")
 
-Rel_R(monolith, heater, "")
+Rel_D(gw, profile_controller, "")
+Rel_D(profile_controller, profile_service, "")
+Rel_D(profile_service, profile_db, "")
 
+Rel_D(gw, device_controller, "")
+Rel_D(device_controller, device_service, "")
+Rel_D(device_service, device_db, "")
+Rel_D(device_service, heater, "")
 
-Rel_R(device, light, "Send command")
-Rel_R(device, gate, "Send command")
-Rel_R(device, video, "Send command")
+Rel_R(device_service, light, "")
+Rel_R(device_service, gate, "")
+Rel_R(device_service, video, "")
 
-Rel_R(gw, telemetry, "")
+Rel_R(gw, telemetry_controller, "")
+Rel_D(telemetry_controller, telemetry_service, "")
+Rel_D(telemetry_harvester, telemetry_queue, "")
+Rel_D(telemetry_qp, telemetry_queue, "")
+Rel_D(telemetry_qp, telemetry_db, "")
+Rel_D(telemetry_service, telemetry_db, "")
+Rel_L(telemetry_harvester, device_controller, "")
 
-Lay_D(light, gate)
-Lay_D(gate, video)
-Lay_D(video, heater)
+'Lay_D(light, gate)
+'Lay_D(gate, video)
+'Lay_D(video, heater)
 
-Rel_R(telemetry, light, "Get data")
-Rel_R(telemetry, gate, "Get data")
-Rel_R(telemetry, video, "Get data")
-Rel_R(telemetry, heater, "Get data")
+Rel_R(telemetry_harvester, light, "")
+Rel_R(telemetry_harvester, gate, "")
+Rel_R(telemetry_harvester, video, "")
+Rel_R(telemetry_harvester, heater, "")
 
-Rel_R(profile, device, "Get devices")
-Rel_D(telemetry, device, "Get devices")
+Rel_R(profile_controller, device_controller, "") 
 
 @enduml

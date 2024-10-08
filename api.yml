@@ -323,6 +323,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Telemetry'
+  /devices/{deviceId}/command:
+    post:
+      operationId: sendCommand
+      tags:
+      - Device management
+      summary: Send command to device
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                command:
+                  type: string
+      responses:
+        '201': 
+          description: Created
 components:
   schemas:
     HouseholderRequest:

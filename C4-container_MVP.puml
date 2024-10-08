@@ -3,7 +3,7 @@
 
 LAYOUT_WITH_LEGEND()
 
-Title Smart House System TO-BE container diagram
+Title Smart House System MVP container diagram
 
 Person(householder, "Householder", "A person who runs a house")
 
@@ -13,6 +13,7 @@ System_Boundary(smartHome_b, "Smart House", "A system that controls a house's he
     Container(profile, "Profile management")
     Container(device, "Device management")
     Container(telemetry, "Telemetry")
+    Container(monolith, "Existing monolith")
 }
 
 System_Ext(heater, "Heating System", "Home heating system with temperature sensors")
@@ -27,11 +28,14 @@ Rel_D(householder, web, "")
 Rel_D(web, gw, "Call API")
 Rel_D(gw, profile, "")
 Rel_D(gw, device, "")
+Rel_D(device, monolith, "")
+
+Rel_R(monolith, heater, "")
+
 
 Rel_R(device, light, "Send command")
 Rel_R(device, gate, "Send command")
 Rel_R(device, video, "Send command")
-Rel_R(device, heater, "Send command")
 
 Rel_R(gw, telemetry, "")
 

@@ -7,6 +7,7 @@ Actor("Process", "$ma_settings_box", $name, $label, $color, $scale, $note)
 !endprocedure
 
 Person(householder)
+Person(admin)
 
 
 Boundary(device_management, Device management) {
@@ -34,8 +35,8 @@ activity(|, smartHome, "Send command", device)
 
 activity(_, householder, "View device state", view, "from", smartHome)
 
-activity(_, householder, "Register user", register_U, "in", smartHome)
-activity(_, householder, "Register house", register_H, "in", smartHome)
+activity(_, admin, "Register user", register_U, "in", smartHome)
+activity(_, admin, "Register house", register_H, "in", smartHome)
 activity(_, householder, "Register device", register_D, "in", smartHome)
 
 activity(_, smartHome, "Get telemetry by schedule", telemetryB, "from", device)
