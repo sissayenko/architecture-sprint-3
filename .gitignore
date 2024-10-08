@@ -192,3 +192,16 @@ build/
 
 tmp/
 task-*
+/smart-home-monolith/nb-configuration.xml
+/DeviceManagementMS/nbactions.xml
+/DeviceManagementMS/nb-configuration.xml
+/profile-management-ms/nbactions.xml
+/profile-management-ms/nb-configuration.xml
+/device-management-ms/nbactions.xml
+/device-management-ms/nb-configuration.xml
+/smart-home-monolith/nbactions.xml
+/telemetry-ms/nb-configuration.xml
+/telemetry-ms/nbactions.xml
+/telemetry-harvester-ms/nb-configuration.xml
+/telemetry-harvester-ms/nbactions.xml
+Sprint3.xmind

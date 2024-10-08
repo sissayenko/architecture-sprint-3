@@ -1,0 +1,19 @@
+@startuml C4-context
+!include <C4/C4_Context.puml>
+
+LAYOUT_WITH_LEGEND()
+
+Person(householder, "Householder", "A person who runs a house")
+
+System_Boundary(smartHome_b, "Smart House", "A system that controls a house's heating system") {
+    System(smartHome, "Smart House", "A system that controls a house's heating system")
+}
+
+System_Ext(heater, "Heating System", "Home heating system with temperature sensors")
+
+Rel_D(householder, smartHome, "Set desired temperature")
+Rel_D(householder, smartHome, "Switch heating system on/off")
+Rel_D(householder, smartHome, "View current temperature")
+Rel_L(smartHome, heater, "Read current temperature")
+Rel_L(smartHome, heater, "Control heating system")
+@enduml

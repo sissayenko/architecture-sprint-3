@@ -24,6 +24,13 @@ public class HeatingSystemController {
 
     private static final Logger logger = LoggerFactory.getLogger(HeatingSystemController.class);
 
+    @PostMapping()
+    public ResponseEntity<HeatingSystemDto> createHeatingSystem(@RequestBody HeatingSystemDto heatingSystemDto) {
+        logger.info("Creating heating system");
+        return ResponseEntity.ok(heatingSystemService.createHeatingSystem(heatingSystemDto));
+
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<HeatingSystemDto> getHeatingSystem(@PathVariable("id") Long id) {
         logger.info("Fetching heating system with id {}", id);
@@ -32,7 +39,7 @@ public class HeatingSystemController {
 
     @PutMapping("/{id}")
     public ResponseEntity<HeatingSystemDto> updateHeatingSystem(@PathVariable("id") Long id,
-                                                                @RequestBody HeatingSystemDto heatingSystemDto) {
+            @RequestBody HeatingSystemDto heatingSystemDto) {
         logger.info("Updating heating system with id {}", id);
         return ResponseEntity.ok(heatingSystemService.updateHeatingSystem(id, heatingSystemDto));
     }

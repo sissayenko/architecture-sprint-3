@@ -1,0 +1,76 @@
+services:
+  profile-management-ms:
+    build:
+      context: ./profile-management-ms/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      - DB_HOST=173.17.0.14
+      - DEVICE_URL=http://173.17.0.12:8080
+    ports:
+      - "8084:8080"
+    networks:
+      sprint3:
+        ipv4_address: "173.17.0.11"
+  device-management-ms:
+    build:
+      context: ./device-management-ms/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      - DB_HOST=173.17.0.14
+    ports:
+      - "8081:8080"
+    networks:
+      sprint3:
+        ipv4_address: "173.17.0.12"  
+  telemetry-ms:
+    build:
+      context: ./telemetry-ms/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      - DB_HOST=173.17.0.14
+    ports:
+      - "8082:8080"
+    networks:
+      sprint3:
+        ipv4_address: "173.17.0.13"
+  monolith:
+    build:
+      context: ./smart-home-monolith/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      - DB_HOST=173.17.0.14
+    ports:
+      - "8083:8080"
+    networks:
+      sprint3:
+        ipv4_address: "173.17.0.15"
+  postgresql:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=sprint3
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./create-db/:/docker-entrypoint-initdb.d/
+    networks:
+      sprint3:
+        ipv4_address: "173.17.0.14"
+networks:
+  sprint3:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "173.17.0.0/16"
+
+  

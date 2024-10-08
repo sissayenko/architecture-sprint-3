@@ -1,0 +1,50 @@
+@startuml
+!include <C4/C4_Container>
+
+LAYOUT_WITH_LEGEND()
+
+Title Smart House System TO-BE container diagram
+
+Person(householder, "Householder", "A person who runs a house")
+
+System_Boundary(smartHome_b, "Smart House", "A system that controls a house's heating system") {
+    Container(web, "Web application", "An adaptive application providing UI to Smart House system")
+    Container(gw, "API gateway")
+    Container(profile, "Profile management")
+    Container(device, "Device management")
+    Container(telemetry, "Telemetry")
+}
+
+System_Ext(heater, "Heating System", "Home heating system with temperature sensors")
+System_Ext(light, "Lighting System", "Home lighing system with light sensors")
+System_Ext(gate, "Automatic gate", "Automatic gate system")
+System_Ext(video, "video surveillance", "video surveillance system")
+
+
+Lay_R(profile, device)
+
+Rel_D(householder, web, "")
+Rel_D(web, gw, "Call API")
+Rel_D(gw, profile, "")
+Rel_D(gw, device, "")
+
+Rel_R(device, light, "Send command")
+Rel_R(device, gate, "Send command")
+Rel_R(device, video, "Send command")
+Rel_R(device, heater, "Send command")
+
+Rel_R(gw, telemetry, "")
+
+Lay_D(light, gate)
+Lay_D(gate, video)
+Lay_D(video, heater)
+
+Rel_R(telemetry, light, "Get data")
+Rel_R(telemetry, gate, "Get data")
+Rel_R(telemetry, video, "Get data")
+Rel_R(telemetry, heater, "Get data")
+
+Rel_R(profile, device, "Get devices")
+Rel_D(telemetry, device, "Get devices")
+
+@enduml

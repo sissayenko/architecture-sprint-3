@@ -1,0 +1,20 @@
+@startuml
+
+package "Telemetry Component" {
+    interface TelemetryDevice {
+    }
+
+    class TelemetryCommonDeviceImpl {
+        +getTelemetry()
+
+    }
+
+    class TelemetryHeaterDeviceImpl {
+        +getTemperature()
+    }
+
+    TelemetryDevice <|-- TelemetryCommonDeviceImpl
+    TelemetryDevice <|-- TelemetryHeaterDeviceImpl
+}
+
+@enduml

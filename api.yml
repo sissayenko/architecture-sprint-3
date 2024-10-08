@@ -1,0 +1,456 @@
+openapi: '3.0.3'
+info:
+  title: Smart Home API
+  version: '1.0'
+servers:
+  - url: /api/v1
+tags:
+  - name: Profile management
+  - name: Device management
+  - name: Telemetry
+paths:
+  /householders:
+    post:
+      operationId: createHouseholder
+      tags:
+      - Profile management
+      summary: Create new householder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HouseholderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseholderResponse'
+  /householders/{householderId}:
+    get:
+      operationId: getHouseholder
+      tags:
+      - Profile management
+      summary: Get householder info
+      parameters:
+      - name: householderId
+        in: path
+        description: Id of householder to return
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseholderResponse'
+  /householders/{householderId}/houses:
+    post:
+      operationId: createHouse
+      tags:
+      - Profile management
+      summary: Create new house runned by householder
+      parameters:
+      - name: householderId
+        in: path
+        description: Id of householder
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HouseRequest'
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+    get:
+      operationId: getHousesList
+      tags:
+      - Profile management
+      summary: Get houses list owned runned by householder
+      parameters:
+      - name: householderId
+        in: path
+        description: Id of householder
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HouseResponse'      
+  /houses/{houseId}:
+    get:
+      operationId: getHouse
+      tags:
+      - Profile management
+      summary: Get house info
+      parameters:
+      - name: houseId
+        in: path
+        description: Id of house to return
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type : object
+                properties:
+                  house:
+                    $ref: '#/components/schemas/HouseResponse'
+                  devices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceResponse'
+                
+  /houses/{houseId}/enable:
+    patch:
+      operationId: enableHouse
+      tags:
+      - Profile management
+      summary: Enable house
+      parameters:
+      - name: houseId
+        in: path
+        description: Id of house
+        required: true
+        schema:
+          type: string
+      responses:
+        '200' :
+          description: OK 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+  /houses/{houseId}/disable:
+    patch:
+      operationId: disableHouse
+      tags:
+      - Profile management
+      summary: Disable house
+      parameters:
+      - name: houseId
+        in: path
+        description: Id of house 
+        required: true
+        schema:
+          type: string
+      responses:
+        '200' :
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+  /devices:
+    post:
+      operationId: createDevice
+      tags:
+      - Device management
+      summary: Create new device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRequest'
+      responses:
+        '201': 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+    get:
+      operationId: getDevicesList
+      tags:
+      - Device management
+      summary: Get devices list by house
+      parameters:
+      - name: houseId
+        in: path
+        description: Id of house 
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceResponse'
+  /devices/all:  
+    get:
+      operationId: getDevicesListAll
+      tags:
+      - Device management
+      summary: Get all enabled devices list. Not for public usage!
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceResponse'
+  /devices/{deviceId}:
+    get:
+      operationId: getDevice
+      tags:
+      - Device management
+      summary: Get device info
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device 
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse' 
+  /devices/{deviceId}/enable: 
+    patch:
+      operationId: enableDevice
+      tags:
+      - Device management
+      summary: Enable device
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+  /devices/{deviceId}/disable:  
+    patch:
+      operationId: disableDevice
+      tags:
+      - Device management
+      summary: Disable device
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+  /devices/{deviceId}/telemetry:
+    get:
+      operationId: getTelemetry
+      tags:
+      - Telemetry
+      summary: Get device telemetry
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: Start date and time in ISO 8601 format
+        required: false
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: End date and time in ISO 8601 format
+        required: false
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Telemetry'
+  /devices/{deviceId}/telemetry/latest:
+    get:
+      operationId: getLatestTelemetry
+      tags:
+      - Telemetry
+      summary: Get latest device telemetry
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Telemetry'
+  /devices/{deviceId}/command:
+    post:
+      operationId: sendCommand
+      tags:
+      - Device management
+      summary: Send command to device
+      parameters:
+      - name: deviceId
+        in: path
+        description: Id of device
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                command:
+                  type: string
+      responses:
+        '201': 
+          description: Created
+components:
+  schemas:
+    HouseholderRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+    HouseholderResponse:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - isEnabled
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        isEnabled:
+          type: boolean
+    HouseRequest:
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+    HouseResponse:
+      type: object
+      required:
+        - id
+        - address
+        - householderId
+        - enabled
+      properties:
+        id:
+          type: string
+        householderId:
+          type: string
+        address:
+          type: string
+        enabled:
+          type: boolean
+    DeviceRequest:
+      type: object
+      required:
+        - name
+        - deviceType
+        - houseId
+      properties:
+        name:
+          type: string
+          enum: [HEATER, CCTV, GATE, LIGHT]
+        deviceType:
+          type: string
+        houseId:
+          type: string
+    DeviceResponse:
+      type: object
+      required:
+        - id
+        - name
+        - deviceType
+        - externalId
+        - houseId
+        - enabled
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        deviceType:
+          type: string
+          enum: [HEATER, CCTV, GATE, LIGHT]
+        houseId:
+          type: string
+        externalId:
+          type: string
+        enabled:
+          type: boolean
+    Telemetry:
+      type: object
+      required:
+        - deviceId
+        - timestamp
+        - sensorName
+        - unit
+        - value
+      properties:
+        deviceId:
+          type: string
+        timestamp:
+          type: string
+        sensorName:
+          type: string
+        unit:
+          type: string
+        value:
+          type: string
